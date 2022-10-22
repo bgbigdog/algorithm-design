@@ -1,0 +1,165 @@
+#include<iostream>
+#include<string.h>
+#include<queue>
+
+using namespace std;
+
+struct stt
+{
+	int row;
+	int col;
+	int bao;//二进制表示宝石 
+	int step;
+};
+
+int m, n, K;//m行，n列, K种宝石 
+char a[200][200];//从0行0列开始
+
+int used[200][200][32];
+
+struct stt start, target;
+
+queue <struct stt> q;
+
+int dr[4] = {0, 1, 0, -1};
+int dc[4] = {-1, 0, 1, 0};
+
+int cnt;//传送门的个数
+struct stt c[10];
+
+int bfs();
+int canmoveto(struct stt u, int dire);
+struct stt moveto(struct stt u, int dire);
+void input();
+void init();
+
+int main()
+{
+	int t;
+	int num;
+	
+	cin >> t;
+	while(t--)
+	{
+		input();
+		init();
+		num = bfs();
+		cout << num << endl;	
+	}
+}
+
+int bfs()
+{
+	int i, j;
+	struct stt u, v;
+	
+	while(!q.empty())
+	{
+		//1.取出队首元素u
+		u = q.front();
+		q.pop();
+		//2.扩展u
+		for(i = 0; i < 4; i++)//0,1,2,3分别表示左上右下 
+		{
+			if(canmoveto(u, i) == 1)
+			{
+				v = moveto(u, i);
+				if(a[v.row][v.col] == 'E' && v.bao == ((1 << K) - 1))
+				{
+					return(v.step);
+				}
+				if(a[v.row][v.col] != '$')
+				{
+					q.push(v);
+					used[v.row][v.col][v.bao] = 1;
+				}
+				else
+				{
+					//每个传送门的状态都到达了
+					for(j = 0; j < cnt; j++)
+					{
+						v.row = c[j].row;
+						v.col = c[j].col;
+						used[v.row][v.col][v.bao] = 1;
+						q.push(v);
+					}
+				}
+			}
+		} 
+	}
+	return(-1);
+}
+
+int canmoveto(struct stt u, int dire)
+{
+	int r, c;
+
+	r = u.row + dr[dire];
+	c = u.col + dc[dire];
+	if(r >= 0 && r < m && c >= 0 && c < n && a[r][c] != '#')
+	{
+		return(1);
+	}
+	else
+	{
+		return(0);
+	}
+}
+
+struct stt moveto(struct stt u, int dire)
+{
+	struct stt v;
+	int t, num;
+	int ch; 
+	
+	v.row = u.row + dr[dire];
+	v.col = u.col + dc[dire];
+	v.step = u.step + 1;
+	t = u.bao;
+	ch = a[v.row][v.col];
+	if(ch >= '0' && ch <= '4')
+	{
+		num = ch - '0';
+		t = t | (1 << num);
+	}
+	v.bao = t;
+	return(v);
+}
+
+void input()
+{
+	int i, j;
+	
+	cin >> m >> n >> K;
+	for(i = 0; i < m; i++)
+	{
+		for(j = 0; j < n; j++)
+		{
+			cin >> a[i][j];
+			if(a[i][j] == 'S')
+			{
+				start.row = i;
+				start.col = j;
+				start.bao = 0;
+				start.step = 0;
+			}
+			else if(a[i][j] == '$')
+			{
+				c[cnt].row = i;
+				c[cnt].col = j;
+				cnt++;
+			}
+		}
+	}
+}
+
+void init()
+{
+	memset(used, 0, sizeof(used));
+	used[start.row][start.col][0] = 1;
+	while(!q.empty())
+	{
+		q.pop();
+	}
+	q.push(start);
+}

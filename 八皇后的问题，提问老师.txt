@@ -1,0 +1,96 @@
+#include <iostream>
+#include<cstdlib>
+using namespace std;
+#define N 20
+int q[N];
+
+bool place(int i,int j);
+void queen(int i,int j);
+void showResult(int n);
+
+int main()
+{
+	
+	queen(1,8);
+
+	system("pause");
+	return 0;
+}
+
+bool place(int i,int j)
+{
+	if(i==1)
+	{
+	return true;
+	}
+	int k=1;
+	while (k<i)
+	{
+		if((q[k]==j)||(abs(q[k]-j)==abs(i-k)))
+		{
+			return false;
+		}
+		k++;
+	}
+	return true;
+	
+}
+
+void queen(int i,int n)
+{
+	if(i>n)
+	{
+		showResult(n);
+	}
+
+	else
+	{
+		for(int j=1;j<=n;j++)
+		{
+			if(place(i,j))
+			{
+				q[i]=j;
+				queen(i+1,n);
+			}
+		}
+	}
+}
+
+void showResult(int n)
+{
+	 char chess[8][8]={{'.','.','.','.','.','.','.','.'}\
+	 ,{'.','.','.','.','.','.','.','.'}\
+	 ,{'.','.','.','.','.','.','.','.'}\
+	 ,{'.','.','.','.','.','.','.','.'}\
+	 ,{'.','.','.','.','.','.','.','.'}\
+	 ,{'.','.','.','.','.','.','.','.'}\
+	 ,{'.','.','.','.','.','.','.','.'}\
+	 ,{'.','.','.','.','.','.','.','.'}};
+	 chess[0][q[1]-1]='A';
+	 chess[1][q[2]-1]='A';
+	 chess[2][q[3]-1]='A';
+	 chess[3][q[4]-1]='A';
+	 chess[4][q[5]-1]='A';
+	 chess[5][q[6]-1]='A';
+	 chess[6][q[7]-1]='A';
+	 chess[7][q[8]-1]='A';
+
+	static int count=1;
+	cout<<"No "<<count++<<":"<<endl;
+	 for (int i = 0; i < 8; i++)
+	 {
+		for (int j = 0; j <8; j++)
+		{
+			cout<<chess[i][j];
+		}
+
+		if (i<=6)
+		{
+			cout<<endl;
+		}
+	 }
+	 
+	cout<<endl;
+	
+	 
+}

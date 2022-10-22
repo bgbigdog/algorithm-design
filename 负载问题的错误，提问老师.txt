@@ -1,0 +1,83 @@
+#include <iostream>
+using namespace std;
+int sum=0;
+bool No=1;
+
+void aduge(int w[],int n,int c1,int c2,int catchNum,int weight);
+
+int main()
+{
+
+	int c1,c2,n;//第一个船是c1，第二个船是c2，有n个箱子
+	while (1)
+	{
+		cin>>c1>>c2>>n;
+		if (n==0)
+		{
+			break;
+		}
+		int w[n];
+		sum=0;
+		No=1;
+		for (int i = 0; i < n; i++)
+		{
+			cin>>w[i];
+			sum+=w[i];
+		}
+		for (int i = 0; i < n; i++)
+		{
+			for (int j = 0; j < n-i; j++)
+			{
+				//有n-i个长度数组，做多操作n-i个长度的数组在一个船里面；没有考虑全部船放在c2的情况
+				aduge(w+i,n-i,c1,c2,j,0);				
+			}
+		}
+
+		if (No)
+		{
+			if (sum<=c2)
+			{
+				printf("Yes");
+			}
+			
+			else
+			{
+				printf("No");
+			}
+		}
+
+		else
+		{
+			printf("Yes");
+		}
+		
+	}
+	
+	
+	system("pause");
+	return 0;
+}
+
+void aduge(int w[],int n,int c1,int c2,int catchNum,int weight)//判断是否可以装上,按照catchNum来选取数的个数,递归数、树遍历
+{
+	weight+=w[0];
+	if (weight<=c1)/*符合条件c1没装满*/
+	{
+		if (sum-weight>c2)//c2装过了
+		{
+			if (!catchNum||n==0)//catchNum==0时候,操作数完了或者完成了所有的遍历
+			{
+				return;
+			}
+
+			for (int i = 1; i <= n; i++)//对后面的重量匹配递归树
+			{
+				aduge(w+i,n-i,c1,c2,catchNum-1,weight);
+			}
+		}
+		else
+		{
+			No=0;//不打印No
+		}
+	}
+}

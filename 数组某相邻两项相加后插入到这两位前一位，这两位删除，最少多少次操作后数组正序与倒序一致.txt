@@ -1,0 +1,94 @@
+#include <iostream>
+using namespace std;
+
+int minTransform(int a[],int n ,int count);
+bool adugeNum(int a[],int n);
+void array(int a[],int n,int x);
+void copy(int a[],int b[],int n );
+int main()
+{
+	int n,count=0;
+	cin>>n;
+	int num[n];
+	for (int i = 0; i < n; i++)
+	{
+		/* code */
+		cin>>num[i];
+	}
+	
+	cout<<minTransform(num,n,count)<<endl;
+	system("pause");
+	return 0;
+}
+
+int minTransform(int a[],int n ,int count)
+{
+	int b[n],min=n;
+	copy(a,b,n);
+
+	if (adugeNum(b,n))
+	{
+		/* code */
+		return count;
+	}
+
+	if (n==1)
+	{
+		return count;
+	}
+	
+	for (int i = 0; i < n; i++)
+	{
+		/* code */
+		array(b,n,i);
+		count++;
+		int numMin=minTransform(b,n-1,count);
+		min=(numMin>min?min:numMin);
+	}
+
+	return min;
+	
+}
+
+void copy(int a[],int b[],int n )
+{
+	for (int i = 0; i < n; i++)
+	{
+		/* code */
+		b[i]=a[i];
+	}
+	
+}
+
+//a[x]+a[x-1]->a[x-1],注意长度的更改
+void array(int a[],int n,int x)
+{
+	a[x-1]=a[x]+a[x-1];
+	for (int i =x+1 ; i < n; i++)
+	{
+		a[i-1]=a[i];
+	}
+	return ;
+}
+
+//判断数组是不是回环数
+bool adugeNum(int a[],int n)
+{
+	int i;
+	for (i = 0; i < n/2; i++)
+	{
+		/* code */
+		if(a[i]!=a[n-i-1])
+		{
+			break;
+		}
+	}
+
+	if(i==n/2+1)
+	{
+		return 1;
+	}
+
+	return 0;
+	
+}

@@ -1,0 +1,113 @@
+#include<iostream>
+#include<queue>
+
+using namespace std;
+
+struct stt
+{
+	int row;
+	int col;
+	int step;
+};
+
+int m, n;//m行，n列
+int a[20][20];//从0行0列开始
+
+struct stt start, target;//起始和终点
+
+queue <struct stt> q;//stt类型的队列
+
+int dr[4] = {0, 1, 0, -1};
+int dc[4] = {-1, 0, 1, 0};
+
+int bfs();
+int canmoveto(struct stt u, int dire);
+struct stt moveto(struct stt u, int dire);
+void input();
+void init();
+
+int main()
+{
+	int num;
+	
+	input();
+	init();
+	num = bfs();
+	cout << num << endl;
+}
+
+void input()
+{
+	int i, j;
+	
+	cin >> m >> n;
+	for(i = 0; i < m; i++)
+	{
+		for(j = 0; j < n; j++)
+		{
+			cin >> a[i][j];
+		}
+	}
+	cin >> start.row >> start.col >> target.row >> target.col;	
+}
+
+void init()
+{
+	start.step = 0;
+	a[start.row][start.col] = 1;
+	q.push(start);
+}
+
+int bfs()//判断多少步
+{
+	int i;
+	struct stt u, v;
+	
+	while(!q.empty())
+	{
+		//1.取出队首元素u
+		u = q.front();
+		q.pop();
+		//2.扩展u
+		for(i = 0; i < 4; i++)//0,1,2,3分别表示左上右下 
+		{
+			if(canmoveto(u, i) == 1)
+			{
+				v = moveto(u, i);
+				if(v.row == target.row && v.col == target.col)
+				{
+					return(v.step);
+				}
+				q.push(v);
+				a[v.row][v.col] = 1;
+			}
+		} 
+	}
+}
+
+int canmoveto(struct stt u, int dire)
+{
+	int r, c;
+
+	r = u.row + dr[dire];
+	c = u.col + dc[dire];
+	if(r >= 0 && r < m && c >= 0 && c < n && a[r][c] == 0)
+	{
+		return(1);
+	}
+	else
+	{
+		return(0);
+	}
+}
+
+struct stt moveto(struct stt u, int dire)
+{
+	struct stt v;
+	
+	v.row = u.row + dr[dire];
+	v.col = u.col + dc[dire];
+	v.step = u.step + 1;
+	return(v);
+}
+

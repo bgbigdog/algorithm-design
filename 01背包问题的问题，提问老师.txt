@@ -1,0 +1,74 @@
+#include <iostream>
+using namespace std;
+int maxNum[20];
+
+int perfectX(int n, int c, int *w, int *p,int order,int weight)
+{
+	int newWeight=weight+*w;
+	//递归算法
+	if(newWeight>c)
+	{
+		return 0;
+	}
+
+	else
+	{
+		if(order==n-1)
+		{
+			return *p;
+		}
+
+		else
+		{
+			//递归
+			int max=*p;
+			int num=0;
+			for(int i=1;i<n-order;i++)
+			{
+				num=*p+perfectX(n-order,c,w+i,p+i,i,newWeight);
+				max=(num>max?num:max);
+			}
+			return max;
+		}
+	}
+}
+
+int main()
+{
+	int n=1, c=1,max=0,num;
+	int count=0;
+	while (1)
+	{
+		cin >> n >> c;
+		if (n==0&&c==0)
+		{
+			break;
+		}
+		
+		int w[n], p[n];
+		for (int i = 0; i < n; i++)
+		{
+			cin >> w[i];
+		}
+		for (int i = 0; i < n; i++)
+		{
+			cin >> p[i];
+		}
+
+		for(int i=0;i<n;i++)
+		{
+			num=perfectX(n, c, w+i, p+i,i,0);
+			max=(max>num?max:num);
+		}
+		maxNum[count]=max;
+		count++;
+	}
+
+	for (int i = 0; i < count; i++)
+	{
+		cout<<maxNum[i]<<endl;
+	}
+	
+	system("pause");
+	return 0;
+}

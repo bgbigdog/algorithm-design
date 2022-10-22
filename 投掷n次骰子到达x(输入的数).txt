@@ -1,0 +1,35 @@
+#include <iostream>
+using namespace std;
+int count=0;
+
+void findWay(int n );
+
+int main()
+{
+	int n;
+	cin>>n;
+	findWay(n);
+	cout<<count<<endl;
+	system("pause");
+	return 0;
+}
+
+void findWay(int n)
+{
+	if(n>0&&n<=6)
+	{
+		count++;
+	}
+
+	else 
+	{
+		return;
+	}
+	
+
+	for (int i = 1; i <= 6; i++)
+	{
+		findWay(n-i);
+	}
+	
+}

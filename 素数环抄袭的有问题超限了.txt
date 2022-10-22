@@ -1,0 +1,89 @@
+
+将1,2,3,...,20这20个数围成一圈，使相邻的两数之和均为素数。
+
+PS：以下代码只是20个数的情况，稍加修改即可达到自由输入数的个数。
+
+#include iostream
+#include cstdlib
+#include cmath
+using namespace std;
+
+int p[41] = {0};				   下表代表数，内容1代表是素数，0代表不是素数
+int n[20] = {0};				   存放1-20
+int shifoubeifangwenguo[21] = {0}; 表示n中存放的数是否被访问过
+
+void Init_p();
+bool IsPrime(int);
+void bianlixiayige(int);
+
+int main()
+{
+	Init_p();
+	bianlixiayige(0);
+	cout  endl;
+	system(pause);
+	return 0;
+}
+
+void Init_p()
+{ 初始化p数组
+	for (int i = 2; i  41; i++)
+	{
+		if (IsPrime(i))
+			p[i] = 1;
+	}
+}
+
+bool IsPrime(int num)
+{
+	for (int i = 2; i = sqrt(num); i++)
+	{
+		if (num % i == 0)
+			return false;
+	}
+	return true;
+}
+
+void bianlixiayige(int num)
+{
+	if (num  0 && n[0] != 1)
+		return;
+
+	for (int j = 2; j = num; j++)
+	{
+		if (!p[n[j - 2] + n[j - 1]])
+			return;
+	}
+
+	if (num == 20)
+	{
+		if (p[n[0] + n[num - 1]])
+		{ 判断最后一个元素与第一个元素之和是否为素数
+			for (int j = 0; j  num; j++)
+			{
+				
+				if (j != 0)
+				{
+					cout  ' '  n[j];
+				}
+				else
+				{
+					cout  n[j];
+				}
+			}
+			
+			return;
+		}
+	}
+
+	for (int j = 1; j = 20; j++)
+	{
+		if (!shifoubeifangwenguo[j])
+		{
+			n[num] = j;					普普通通的赋值
+			shifoubeifangwenguo[j] = 1; 当前数要遍历，所以设置为已访问
+			bianlixiayige(num + 1);		遍历符合条件的下一个元素
+			shifoubeifangwenguo[j] = 0; 此数为出发点已遍历完，回归为0，这样别的数的遍历才能包含此数。
+		}
+	}
+}
